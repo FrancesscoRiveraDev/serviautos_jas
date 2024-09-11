@@ -1,0 +1,695 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dashboard</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/img/logo.jpg">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/css/templatemo.css">
+  <style>
+
+          
+    body {
+                background-image: url('/fondo2.jpeg');
+                background-size: cover; /* Ajustar la imagen al tamaño de la ventana del navegador */
+                background-attachment: fixed; /* Opcional: hacer que el fondo permanezca fijo al desplazar la página */
+            }
+    
+    
+            
+    th, input {
+        text-align: center;
+      }
+    
+    
+    
+    
+    
+    
+        /* Estilo para el modal de bienvenida */
+        .modal-welcome {
+                display: none;
+                position: fixed;
+                z-index: 1050;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.4);
+            }
+            .modal-content {
+                background-color: #fff;
+                margin: 10% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+            }
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {height: 550px}
+        
+        /* Set gray background color and 100% height */
+        .sidenav {
+          background-color: #f1f1f1;
+          height: 100%;
+        }
+            
+        /* On small screens, set height to 'auto' for the grid */
+        @media screen and (max-width: 767px) {
+          .row.content {height: auto;} 
+        }
+    
+        .navigation a {
+                position: relative;
+                font-size: 1.1em;
+                color: #000;
+                text-decoration: none;
+                font-weight: 500;
+                margin-left: 40px;
+            }
+            
+            .navigation a::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -6px;
+                width: 100%;
+                height: 3px;
+                background: #efbc1c;
+                border-radius: 5px;
+                transform-origin: right;
+                transform: scaleX(0);
+                transition: transform .5s;
+            }
+            
+            .navigation a:hover::after {
+                transform-origin: left;
+                transform: scaleX(1);
+            }
+            
+            .navigation .btnLogin-popup {
+                width: 130px;
+                height: 50px;
+                background: transparent;
+                border: 2px solid #747272;
+                outline: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 1.1em;
+                color: #efbc1c;
+                font-weight: 500;
+                margin-left: 40px;
+                transform: .5s;
+            }
+            
+            .navigation .btnLogin-popup:hover {
+                background: #efbc1c;
+                color: #162938;
+            }
+    
+            /* Estilo para el modal de bienvenida */
+        .modal-welcome {
+          display: none;
+          position: fixed;
+          z-index: 1050;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          overflow: auto;
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+          background-color: #fff;
+          margin: 10% auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%;
+        }
+    
+        /* Añadir estilos a la barra de navegación */
+        .navbar {
+          background-color: #efbc1c;
+        }
+    
+        /* Cambiar el color de fondo de los elementos de la barra de navegación al pasar el ratón sobre ellos */
+        .navbar-nav li a:hover {
+          background-color: #f2921a;
+        }
+    
+        /* Estilo para el botón de "Continuar" */
+        #btn-continue {
+          background-color: #efbc1c;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+        }
+        #btn-continue:hover {
+          background-color: #f2921a;
+        }
+        /* Estilo para los paneles "well" */
+        .well {
+          margin: 10px;
+          padding: 20px;
+          border: 1px solid #efbc1c;
+          background-color: #f0f8ff; /* Color de fondo azul claro */
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Sombra suave */
+        }
+    
+        /* Cambiar el color de fondo de los elementos "well" al pasar el ratón sobre ellos */
+        .well:hover {
+          background-color: #f0f0f0; /* Color de fondo azul más claro al pasar el ratón */
+        }
+    
+        .bar-chart {
+                width: 100%;
+                background-color: #f0f0f0;
+                height: 30px;
+                position: relative;
+            }
+    
+            .bar {
+                height: 100%;
+                background-color: #3498db;
+                transition: width 1s;
+            }
+    
+             /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {height: 550px}
+        
+        /* Set gray background color and 100% height */
+        .sidenav {
+          background-color: #f1f1f1;
+          height: 100%;
+        }
+            
+        /* On small screens, set height to 'auto' for the grid */
+        @media screen and (max-width: 767px) {
+          .row.content {height: auto;} 
+        }
+    
+        /* Set the color for the active class */
+        .nav-pills > li.active > a {
+            background-color: #efbc1c !important;
+            color: #000 !important; /* Cambiar el color del texto si es necesario */
+        }
+    
+        .fondo {
+      background-color: #efbc1c;
+      
+    }
+    
+        .fondo2 {
+      background-color: #f2921a;
+      
+    }
+    
+    .fondo3 {
+      background-color: #f1eee8;
+      
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto; /* Mantiene la relación de aspecto */
+    }
+    
+    
+    .img2 {
+        max-width: 70%;
+        height: auto; /* Mantiene la relación de aspecto */
+    }
+    
+    /* Estilos específicos para el logo */
+    .logo {
+        max-width: 200px; /* Ajusta este valor según tus necesidades */
+        max-height: 200px; /* Ajusta este valor según tus necesidades */
+        width: auto; /* Permite que el ancho se ajuste automáticamente */
+        height: auto; /* Permite que la altura se ajuste automáticamente */
+    }
+    
+    .text{
+        color: #efbc1c;
+    }
+
+    .icon-small {
+  width: 70px; /* Adjust the width to your desired size */
+  height: 70px; /* Adjust the height to your desired size */
+  color: #efbc1c;
+}
+    
+    
+    
+      </style>
+
+
+</head>
+
+
+<body>
+
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-light shadow fondo">
+  <div class="container d-flex justify-content-between align-items-center">
+
+      
+
+      
+
+      <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+          
+          <div class="navbar align-self-center d-flex">
+              <!--
+              <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
+                  <div class="input-group">
+                      <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
+                      <div class="input-group-text">
+                          <i class="fa fa-fw fa-search"></i>
+                      </div>
+                  </div>
+              </div>
+              
+              <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
+                  <i class="fa fa-fw fa-search text-dark mr-2"></i>
+              </a>
+              -->
+             
+              <a class="nav-icon position-relative text-decoration-none" href="/admin/login">
+                  <i class="fa fa-fw fa-user text-dark mr-3"></i>
+                  <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"></span>
+              </a>
+          </div>
+      </div>
+
+  </div>
+</nav>
+<!-- Close Header -->
+
+
+
+
+<nav class="navbar navbar-inverse visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/admin/dashboard">Inicio</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
+        <li><a href="/admin/empleado">Empleados</a></li>
+        <li><a href="/admin/categoria">Categorias</a></li>
+        <li><a href="/admin/marca">Marcas</a></li>
+        <li><a href="/admin/producto">Productos</a></li>
+        <li><a href="/admin/proveedor">Proveedores</a></li>
+        <li><a href="/admin/orden">Ordenes</a></li>
+        <li><a href="/admin/mensaje">Mensajes</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <nav class="navigation">
+      <div class="col-sm-3 sidenav hidden-xs">
+        <br>
+        <center>
+          <img src="/img/logo.jpg" alt="Logo del sitio web" style="width: 120px; height: auto;">
+        </center>
+        <br>
+        <ul class="nav nav-pills nav-stacked">
+          <li class="active"><a href="/admin/dashboard">Inicio</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
+        <li><a href="/admin/empleado">Empleados</a></li>
+        <li><a href="/admin/categoria">Categorias</a></li>
+        <li><a href="/admin/marca">Marcas</a></li>
+        <li><a href="/admin/producto">Productos</a></li>
+        <li><a href="/admin/proveedor">Proveedores</a></li>
+        <li><a href="/admin/orden">Ordenes</a></li>
+        <li><a href="/admin/mensaje">Mensajes</a></li>
+        </ul><br>
+      </div>
+    </nav>
+
+    
+
+      <div class="col-sm-6">
+        <div class="well">
+          <h4>Bienvenido al sistema!</h4>
+          <p>Aqui tendras un atajo a todas las opciones.</p>
+          
+        </div>
+    </div>
+
+
+
+    <div class="col-sm-3">
+        <div class="well">
+          
+          
+
+          <center>
+            <a href="/admin/logout">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+              </svg>
+            </a>
+          </center>
+
+        </div>
+    </div>
+
+    <br>
+
+    <div class="col-sm-3">
+      <div class="well">
+        
+        
+
+        <center>
+          <a href="/admin/usuario">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+            
+          </a>
+          <h4>Usuarios</h4>
+        </center>
+
+      </div>
+  </div>
+
+
+
+
+  <div class="col-sm-3">
+    <div class="well">
+      
+      
+
+      <center>
+        <a href="/admin/empleado">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+          </svg>
+          
+        </a>
+        <h4>Empleados</h4>
+      </center>
+
+    </div>
+</div>
+
+
+
+<div class="col-sm-3">
+  <div class="well">
+    
+    
+
+    <center>
+      <a href="/admin/categoria">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+        </svg>
+        
+      </a>
+      <h4>Categorias</h4>
+    </center>
+
+  </div>
+</div>
+
+
+<br>
+
+
+<div class="col-sm-3">
+  <div class="well">
+    
+    
+
+    <center>
+      <a href="/admin/marca">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z" />
+        </svg>
+        
+        
+      </a>
+      <h4>Marcas</h4>
+    </center>
+
+  </div>
+</div>
+
+<div class="col-sm-3">
+  <div class="well">
+    
+    
+
+    <center>
+      <a href="/admin/producto">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+        
+        
+      </a>
+      <h4>Productos</h4>
+    </center>
+
+  </div>
+</div>
+
+
+
+<div class="col-sm-3">
+  <div class="well">
+    
+    
+
+    <center>
+      <a href="/admin/proveedor">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+        </svg>
+        
+        
+      </a>
+      <h4>Proveedores</h4>
+    </center>
+
+  </div>
+</div>
+
+
+<br>  
+
+
+  
+
+    <div class="col-sm-3">
+      <div class="well">
+        
+        
+    
+        <center>
+          <a href="/admin/orden">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5A3.375 3.375 0 0 0 6.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-1.5a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 0 0-9-9Z" />
+            </svg>
+            
+            
+            
+          </a>
+          <h4>Ordenes</h4>
+        </center>
+    
+      </div>
+    </div>
+
+  
+    
+    
+    
+    <div class="col-sm-3">
+      <div class="well">
+        
+        
+    
+        <center>
+          <a href="/admin/mensaje">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+            </svg>
+            
+            
+            
+          </a>
+          <h4>Mensajes</h4>
+        </center>
+    
+      </div>
+    </div>
+
+
+    <div class="col-sm-3">
+      <div class="well">
+        
+        
+    
+        <center>
+          <a href="/admin/proveedor">
+           
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
+            </svg>
+            
+            
+            
+          </a>
+          <h4>Información del Sistema</h4>
+        </center>
+    
+      </div>
+    </div>
+
+  
+
+
+
+
+
+
+
+
+      
+      
+
+      
+    
+
+
+
+
+  </div>
+</div>
+
+<br><br>
+
+ <!-- Start Footer -->
+ <footer class="bg-dark" id="tempaltemo_footer">
+  <div class="container">
+      <div class="row">
+
+          
+
+          
+         
+
+      </div>
+
+      
+      
+  </div>
+  <br>
+
+  <div class="w-100 bg-black py-3">
+      <div class="container">
+          <div class="row pt-2">
+              <div class="col-12">
+                  <p class="text-left text-light">
+                      Copyright &copy; 2024 Serviautos Jas 
+                      | Designed by Francessco Rivera 
+                  </p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</footer>
+<!-- End Footer -->
+
+
+
+
+
+<script>
+  // Datos de ejemplo para el gráfico de pastel
+  var data = {
+      labels: ['Calidad', 'Precio'],
+      datasets: [{
+          data: [70, 30], // Aquí puedes ajustar los valores de Calidad y Precio
+          backgroundColor: ['#FF5733', '#33FF57'] // Colores de las secciones del pastel
+      }]
+  };
+
+  // Configuración del gráfico de pastel
+  var options = {};
+
+  // Obtén el contexto del lienzo en el elemento canvas
+  var ctx = document.getElementById('pieChart').getContext('2d');
+
+  // Crea el gráfico de pastel
+  var pieChart = new Chart(ctx, {
+      type: 'pie',
+      data: data,
+      options: options
+  });
+</script>
+
+<script>
+        // Datos de ejemplo para el gráfico
+        var data = {
+            labels: ['', 'Empleados', 'Proveedores'],
+            datasets: [{
+                data: [30, 50, 20],
+                backgroundColor: ['#FFD700', '#C0C0C0', '#CD7F32']
+            }]
+        };
+
+        // Configuración del gráfico
+        var options = {
+            responsive: true
+        };
+
+        // Obtén el contexto del lienzo en el elemento canvas
+        var ctx = document.getElementById('miGrafico').getContext('2d');
+
+        // Crea el gráfico de pastel
+        var myPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: options
+        });
+    </script>
+
+<script>
+  // Supongamos que obtienes la cantidad de clientes registrados desde la base de datos
+  var clientesRegistrados = 50; // Esto es solo un valor de ejemplo
+
+  // Calcula el ancho de la barra de acuerdo con la cantidad de clientes registrados
+  var anchoBarra = (clientesRegistrados / 100) * 100; // Suponemos un máximo de 100 clientes
+
+  // Aplica el ancho a la barra
+  var barra = document.querySelector(".bar");
+  barra.style.width = anchoBarra + "%";
+</script>
+
+</body>
+</html>
