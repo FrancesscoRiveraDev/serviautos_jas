@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Usuarios</title>
+  <title>Mensajes</title>
   <link rel="shortcut icon" type="image/x-icon" href="/img/logo.jpg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -269,6 +269,7 @@
 }
 
 
+
 </style>
 
     
@@ -335,7 +336,7 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href="/admin/dashboard">Inicio</a></li>
-        <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
         <li><a href="/admin/empleado">Empleados</a></li>
         <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
@@ -343,7 +344,7 @@
         <li><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
-        <li><a href="/admin/mensaje">Mensajes</a></li>
+        <li class="active"><a href="/admin/mensaje">Mensajes</a></li>
       </ul>
     </div>
   </div>
@@ -360,7 +361,7 @@
         <br>
         <ul class="nav nav-pills nav-stacked">
           <li><a href="/admin/dashboard">Inicio</a></li>
-          <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+          <li><a href="/admin/usuario">Usuarios</a></li>
           <li><a href="/admin/empleado">Empleados</a></li>
           <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
@@ -368,7 +369,7 @@
         <li><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
-        <li><a href="/admin/mensaje">Mensajes</a></li>
+        <li class="active"><a href="/admin/mensaje">Mensajes</a></li>
         </ul><br>
       </div>
     </nav>
@@ -376,8 +377,8 @@
 
     <div class="col-sm-6">
         <div class="well">
-          <h4>Usuarios</h4>
-          <p>Aqui ingresaras usuarios nuevos al sistema.</p>
+          <h4>Mensajes</h4>
+          <p>Aqui podras ver con totalidad la información de un mensaje.</p>
         </div>
     </div>
 
@@ -401,120 +402,67 @@
 
     <div class="col-sm-9">
         <div class="well">
-            <form action="/saveUsuario" method="POST">
-                <label>Ingresa datos para la cuenta.</label>
-                <br><br><br>
-    
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label>Usuario</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <br>
-    
-    
-                        <div class="mb-3">
-                            <label>Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <br>
 
-                        <div class="mb-3">
-                            <label for="rol_idRol">Rol</label>
-                            <br>
-                            <select id="rol_idRol" name="rol_idRol" class="form-control" >
-                                
-                                <option value="1">Administrador</option>
-                                <option value="2">Mecánico</option>
-                                
-                                
-                            </select>
-                        </div>
-                        <br>
+            
+                
 
-                        <div class="mb-3">
-                            <label for="dpi" class="form-label">Dpi</label>
-                            <input type="text" class="form-control" id="dpi" name="dpi" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" tabindex="1" required>
-                        </div>
-                        <br>
-
-
-                    </div>
-                    <!--aca termina la columna de la izquierda-->
-
+            <% if (mensaje) { %>
+                <div class="card border-secondary">  
+                    <div class="card-header">Editar Mensaje</div>
+                    <br>
                     
-    
-                    <div class="col-md-6">
-                        
-                        
-    
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Telefono</label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" tabindex="1" required>
-                        </div>
-                        <br>
+                    <div class="card-body">
+                        <form action="/updateMensaje" method="POST">
+                            <input id="idMensaje" name="idMensaje" value="<%= mensaje.idMensaje %>" hidden>
+            
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1" value="<%= mensaje.nombre %>" readonly>                        
+                            </div> 
+                            <br>
 
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion" tabindex="1" required>
-                        </div>
-                        <br>
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono" tabindex="2" value="<%= mensaje.telefono %>" readonly>                        
+                            </div> 
+                            <br>
 
-                        <div class="mb-3">
-                            <label for="puesto" class="form-label">Puesto</label>
-                            <input type="text" class="form-control" id="puesto" name="puesto" tabindex="1" required>
-                        </div>
-                        <br>
+                            <div class="mb-3">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-control" id="estado" name="estado" tabindex="3">
+                                    <option value="1" <%= mensaje.estado_mensaje_idEstadoMensaje == 1 ? 'selected' : '' %>>Nuevo</option>
+                                    <option value="2" <%= mensaje.estado_mensaje_idEstadoMensaje == 2 ? 'selected' : '' %>>Atendido</option>
+                                </select>
+                            </div>
+                            <br>
 
-                        <div class="mb-3">
-                          <label for="sueldo" class="form-label">Sueldo</label>
-                          <input type="text" class="form-control" id="sueldo" name="sueldo" tabindex="1" required>
-                          </div>
-                        <br>
+                            <div class="mb-3"></div>
+                                <label for="mensaje" class="form-label">Mensaje</label>
+                                <textarea class="form-control" id="mensaje" name="mensaje" tabindex="1" required rows="8" readonly><%= mensaje.mensaje %></textarea>
 
+                            </div>
+                              <br>
 
-    
-                        
-    
-                        <div class="mb-3">
-                            <label for="fechaNac" class="form-label">Fecha de nacimiento</label>
-                            <input type="date" class="form-control" id="fechaNac" name="fechaNac" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="fechaContratacion" class="form-label">Fecha de contratación</label>
-                            <input type="date" class="form-control" id="fechaContratacion" name="fechaContratacion" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                          
+                            
+                            <center>
+                                <button type="submit" class="btn btn-success btn-lg px-3" tabindex="4">Guardar</button>
+                                <a href="/admin/mensaje" class="btn btn-danger btn-lg px-3">Cancelar</a>
+                            </center>
+                        </form>
                     </div>
                 </div>
-    
                 <br><br>
-    
-                <center>
-                    <button type="submit" class="btn btn-success btn-lg px-3" tabindex="5">Guardar</button>
-                    <a href="/admin/usuario" class="btn btn-danger btn-lg px-3">Cancelar</a>
-                </center>
-            </form>
+            <% } %>
             
+            
+
         </div>
     </div>
+    
+
+
+
+    
     
     
 <!-- tabla de registro-->

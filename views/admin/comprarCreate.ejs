@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Usuarios</title>
+  <title>Compras</title>
   <link rel="shortcut icon" type="image/x-icon" href="/img/logo.jpg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -335,12 +335,12 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href="/admin/dashboard">Inicio</a></li>
-        <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
         <li><a href="/admin/empleado">Empleados</a></li>
         <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
-        <li><a href="/admin/comprar">Comprar Producto</a></li>
+        <li class="active"><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
         <li><a href="/admin/mensaje">Mensajes</a></li>
@@ -360,12 +360,12 @@
         <br>
         <ul class="nav nav-pills nav-stacked">
           <li><a href="/admin/dashboard">Inicio</a></li>
-          <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+          <li><a href="/admin/usuario">Usuarios</a></li>
           <li><a href="/admin/empleado">Empleados</a></li>
           <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
-        <li><a href="/admin/comprar">Comprar Producto</a></li>
+        <li class="active"><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
         <li><a href="/admin/mensaje">Mensajes</a></li>
@@ -376,8 +376,8 @@
 
     <div class="col-sm-6">
         <div class="well">
-          <h4>Usuarios</h4>
-          <p>Aqui ingresaras usuarios nuevos al sistema.</p>
+          <h4>Compras de producto</h4>
+          <p>Aqui realizaras la compra de productos.</p>
         </div>
     </div>
 
@@ -393,128 +393,234 @@
         </div>
     </div>
 
-    
+   
 
 
 
     <!-- tabla de registro-->
 
+    
+    
+    <!-- Contenedor para agregar los productos dinámicamente -->
     <div class="col-sm-9">
         <div class="well">
-            <form action="/saveUsuario" method="POST">
-                <label>Ingresa datos para la cuenta.</label>
-                <br><br><br>
-    
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label>Usuario</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <br>
-    
-    
-                        <div class="mb-3">
-                            <label>Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <br>
+            <form action="/saveComprar" method="POST">
 
+
+                <label>Proveedor</label>
+                <select name="proveedor_idProveedor" class="form-control" required>
+                    <option value="">Selecciona un proveedor</option>
+                    <% proveedores.forEach(proveedor => { %>
+                        <option value="<%= proveedor.idProveedor %>"><%= proveedor.nombre %></option>
+                    <% }); %>
+                </select>
+                <br>
+            
+                <label>Tipo de Pago</label>
+                <select name="tipo_pago" class="form-control" required>
+                    <option value="">Selecciona un tipo de pago</option>
+                    <% tipoPagos.forEach(tipoPago => { %>
+                        <option value="<%= tipoPago.idTipo_pago %>"><%= tipoPago.tipo %></option>
+                    <% }); %>
+                </select>
+                <br>
+            
+                <!-- Contenedor dinámico para productos -->
+                <div id="productosContainer">
+                    <div class="producto-item">
+                        <label>Producto 1:</label>
+            
+                        <!-- Select de productos -->
                         <div class="mb-3">
-                            <label for="rol_idRol">Rol</label>
-                            <br>
-                            <select id="rol_idRol" name="rol_idRol" class="form-control" >
-                                
-                                <option value="1">Administrador</option>
-                                <option value="2">Mecánico</option>
-                                
-                                
+                            <label for="producto_idProducto" class="form-label">Producto</label>
+                            <select name="producto_idProducto[]" class="form-control" required>
+                                <option value="">Selecciona un producto</option>
+                                <% productos.forEach(producto => { %>
+                                    <option value="<%= producto.idProducto %>"><%= producto.nombre %></option>
+                                <% }); %>
                             </select>
                         </div>
                         <br>
-
+            
                         <div class="mb-3">
-                            <label for="dpi" class="form-label">Dpi</label>
-                            <input type="text" class="form-control" id="dpi" name="dpi" tabindex="1" required>
+                            <label for="cantidad" class="form-label">Cantidad</label>
+                            <input type="number" class="form-control cantidad" name="cantidad[]" required>
                         </div>
                         <br>
-
+            
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1" required>
+                            <label for="precioUnitario" class="form-label">Precio Unitario</label>
+                            <input type="number" class="form-control precioUnitario" name="precioUnitario[]" required>
                         </div>
                         <br>
-    
+            
                         <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" tabindex="1" required>
+                            <label>Total</label>
+                            <input type="text" class="form-control total" name="total[]" >
                         </div>
                         <br>
-
-
-                    </div>
-                    <!--aca termina la columna de la izquierda-->
-
-                    
-    
-                    <div class="col-md-6">
-                        
-                        
-    
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Telefono</label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="puesto" class="form-label">Puesto</label>
-                            <input type="text" class="form-control" id="puesto" name="puesto" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                          <label for="sueldo" class="form-label">Sueldo</label>
-                          <input type="text" class="form-control" id="sueldo" name="sueldo" tabindex="1" required>
-                          </div>
-                        <br>
-
-
-    
-                        
-    
-                        <div class="mb-3">
-                            <label for="fechaNac" class="form-label">Fecha de nacimiento</label>
-                            <input type="date" class="form-control" id="fechaNac" name="fechaNac" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="fechaContratacion" class="form-label">Fecha de contratación</label>
-                            <input type="date" class="form-control" id="fechaContratacion" name="fechaContratacion" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                          
+            
+                        <button type="button" class="btn btn-danger btn-sm eliminarProducto" style="display:none;">Eliminar Producto</button>
+                        <hr> <!-- Separador entre productos -->
                     </div>
                 </div>
-    
+            
+                <!-- Botón para agregar más productos -->
+                <button type="button" class="btn btn-primary btn-sm" id="agregarProducto">Agregar Producto</button>
                 <br><br>
-    
+            
+                <label>Total Global:</label>
+                <input type="number" id="totalGlobal" class="form-control" name="totalGlobal" readonly>
+                <br>
+            
                 <center>
-                    <button type="submit" class="btn btn-success btn-lg px-3" tabindex="5">Guardar</button>
-                    <a href="/admin/usuario" class="btn btn-danger btn-lg px-3">Cancelar</a>
+                    <button type="submit" class="btn btn-success btn-lg px-3">Guardar</button>
+                    <a href="/admin/comprar" class="btn btn-danger btn-lg px-3">Cancelar</a>
                 </center>
             </form>
             
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    let productosContainer = document.getElementById('productosContainer');
+                    let agregarProductoBtn = document.getElementById('agregarProducto');
+                    let totalGlobalInput = document.getElementById('totalGlobal');
+            
+                    agregarProductoBtn.addEventListener('click', function () {
+                        // Obtener la cantidad actual de productos en el contenedor
+                        let productoItems = document.querySelectorAll('.producto-item');
+                        let nuevoNumeroProducto = productoItems.length + 1;
+            
+                        // Crear un nuevo producto
+                        let nuevoProducto = document.createElement('div');
+                        nuevoProducto.classList.add('producto-item');
+                        nuevoProducto.innerHTML = `
+                            <label>Producto ${nuevoNumeroProducto}:</label>
+            
+                            <div class="mb-3">
+                                <label for="producto_idProducto" class="form-label">Producto</label>
+                                <select name="producto_idProducto[]" class="form-control" required>
+                                    <option value="">Selecciona un producto</option>
+                                    <% productos.forEach(producto => { %>
+                                        <option value="<%= producto.idProducto %>"><%= producto.nombre %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <br>
+            
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad</label>
+                                <input type="text" class="form-control cantidad" name="cantidad[]" required>
+                            </div>
+                            <br>
+            
+                            <div class="mb-3">
+                                <label for="precioUnitario" class="form-label">Precio Unitario</label>
+                                <input type="text" class="form-control precioUnitario" name="precioUnitario[]" required>
+                            </div>
+                            <br>
+            
+                            <div class="mb-3">
+                                <label>Total</label>
+                                <input type="text" class="form-control total" name="total[]" >
+                            </div>
+                            <br>
+            
+                            <button type="button" class="btn btn-danger btn-sm eliminarProducto">Eliminar Producto</button>
+                            <hr>
+                        `;
+            
+                        // Añadir el nuevo producto al contenedor
+                        productosContainer.appendChild(nuevoProducto);
+            
+                        // Habilitar el botón "Eliminar" si hay más de un producto
+                        actualizarBotonesEliminar();
+            
+                        // Actualizar los cálculos de total para los nuevos productos
+                        actualizarCalculos();
+                    });
+            
+                    // Actualizar los botones "Eliminar Producto"
+                    function actualizarBotonesEliminar() {
+                        let eliminarBotones = document.querySelectorAll('.eliminarProducto');
+                        eliminarBotones.forEach((boton, index) => {
+                            boton.style.display = (eliminarBotones.length > 1) ? 'inline-block' : 'none';
+                            boton.addEventListener('click', function () {
+                                if (eliminarBotones.length > 1) {
+                                    boton.parentElement.remove();
+                                    actualizarNumeracionProductos();
+                                    actualizarCalculos();
+                                }
+                            });
+                        });
+                    }
+            
+                    // Actualizar la numeración de los productos
+                    function actualizarNumeracionProductos() {
+                        let productoItems = document.querySelectorAll('.producto-item');
+                        productoItems.forEach((item, index) => {
+                            item.querySelector('label').textContent = `Producto ${index + 1}:`;
+                        });
+                    }
+            
+                    // Actualizar los cálculos de total y total global
+                    function actualizarCalculos() {
+                        let cantidadInputs = document.querySelectorAll('.cantidad');
+                        let precioUnitarioInputs = document.querySelectorAll('.precioUnitario');
+                        let totalInputs = document.querySelectorAll('.total');
+                        let totalGlobal = 0;
+            
+                        cantidadInputs.forEach((cantidadInput, index) => {
+                            // Calcular total para el producto al cargar la página
+                            calcularTotal(index);
+            
+                            // Añadir eventos de input para que los cálculos se actualicen al cambiar cantidad o precio
+                            cantidadInput.addEventListener('input', function () {
+                                calcularTotal(index);
+                            });
+                            precioUnitarioInputs[index].addEventListener('input', function () {
+                                calcularTotal(index);
+                            });
+            
+                            function calcularTotal(index) {
+                                let cantidad = parseFloat(cantidadInputs[index].value) || 0;
+                                let precioUnitario = parseFloat(precioUnitarioInputs[index].value) || 0;
+                                let total = cantidad * precioUnitario;
+            
+                                totalInputs[index].value = total.toFixed(2);
+                                actualizarTotalGlobal();
+                            }
+                        });
+            
+                        // Llamar a actualizarTotalGlobal aquí para asegurar que se actualice desde el inicio
+                        actualizarTotalGlobal();
+                    }
+            
+                    // Actualizar el total global sumando todos los productos
+                    function actualizarTotalGlobal() {
+                        let totalInputs = document.querySelectorAll('.total');
+                        let totalGlobal = Array.from(totalInputs).reduce((acc, input) => {
+                            return acc + (parseFloat(input.value) || 0);
+                        }, 0);
+                        
+                        totalGlobalInput.value = totalGlobal.toFixed(2);
+                    }
+            
+                    // Llamar a las funciones necesarias al cargar la página
+                    actualizarCalculos();
+                    actualizarBotonesEliminar();
+                });
+            </script>
+            
+            
+            
+            
+            
         </div>
     </div>
+    
+    
+    
+    
     
     
 <!-- tabla de registro-->
@@ -566,48 +672,9 @@
 
 
 
-<script>
-  // Obtén los elementos de entrada (input) para filtrar
-  const filterID = document.getElementById("filterID");
-  const filterUsername = document.getElementById("filterUsername");
-  const filterTipoCuenta = document.getElementById("filterTipoCuenta");
 
-  // Obtén la tabla que deseas filtrar
-  const table = document.getElementById("tuTabla"); // Asegúrate de reemplazar "tuTabla" con el ID de tu tabla.
 
-  // Agrega eventos de escucha para los campos de filtro
-  filterID.addEventListener("input", filterTable);
-  filterUsername.addEventListener("input", filterTable);
-  filterTipoCuenta.addEventListener("input", filterTable);
 
-  // Función para filtrar la tabla
-  function filterTable() {
-    const filterIDValue = filterID.value.toUpperCase();
-    const filterUsernameValue = filterUsername.value.toUpperCase();
-    const filterTipoCuentaValue = filterTipoCuenta.value.toUpperCase();
-
-    const rows = table.getElementsByTagName("tr");
-
-    for (let row of rows) {
-      const cells = row.getElementsByTagName("td");
-      if (cells.length >= 3) {
-        const id = cells[0].textContent || cells[0].innerText;
-        const username = cells[1].textContent || cells[1].innerText;
-        const tipoCuenta = cells[2].textContent || cells[2].innerText;
-
-        if (
-          id.toUpperCase().includes(filterIDValue) &&
-          username.toUpperCase().includes(filterUsernameValue) &&
-          tipoCuenta.toUpperCase().includes(filterTipoCuentaValue)
-        ) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      }
-    }
-  }
-</script>
 
 
 

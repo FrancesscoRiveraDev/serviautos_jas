@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Usuarios</title>
+  <title>Compra</title>
   <link rel="shortcut icon" type="image/x-icon" href="/img/logo.jpg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -256,10 +256,10 @@
         font-size: 20px; /* Ajusta el tamaño según tus necesidades */
     }
 
-    .btn-bad {
-  background-color: #ff073d !important;
-  border-color: #ff073d !important;
-  color: #fff;
+    .icon-small {
+  width: 20px; /* Adjust the width to your desired size */
+  height: 20px; /* Adjust the height to your desired size */
+  color: #efbc1c;
 }
 
 .icono-salir {
@@ -267,6 +267,23 @@
   height: 70px; /* Adjust the height to your desired size */
   color: #efbc1c;
 }
+
+/* Estilo para el botón de la página activa */
+.pagination .page-item.active .page-link {
+    background-color: #f2921a; /* Color de fondo para el botón activo */
+    border-color: #f2921a;     /* Color del borde del botón activo */
+    color: white;              /* Color del texto para el botón activo */
+}
+
+/* Opcional: cambiar el color de hover y focus en el botón activo */
+.pagination .page-item.active .page-link:hover,
+.pagination .page-item.active .page-link:focus {
+    background-color: #e57b15; /* Un tono más oscuro al hacer hover/focus */
+    border-color: #e57b15;
+    color: white;
+}
+
+
 
 
 </style>
@@ -335,12 +352,12 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href="/admin/dashboard">Inicio</a></li>
-        <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
         <li><a href="/admin/empleado">Empleados</a></li>
         <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
-        <li><a href="/admin/comprar">Comprar Producto</a></li>
+        <li class="active"><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
         <li><a href="/admin/mensaje">Mensajes</a></li>
@@ -360,12 +377,12 @@
         <br>
         <ul class="nav nav-pills nav-stacked">
           <li><a href="/admin/dashboard">Inicio</a></li>
-          <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+          <li><a href="/admin/usuario">Usuarios</a></li>
           <li><a href="/admin/empleado">Empleados</a></li>
           <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
-        <li><a href="/admin/comprar">Comprar Producto</a></li>
+        <li class="active"><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
         <li><a href="/admin/mensaje">Mensajes</a></li>
@@ -376,8 +393,8 @@
 
     <div class="col-sm-6">
         <div class="well">
-          <h4>Usuarios</h4>
-          <p>Aqui ingresaras usuarios nuevos al sistema.</p>
+          <h4>Compra de productos</h4>
+          <p>Aca estan las compras de productos registradas.</p>
         </div>
     </div>
 
@@ -393,130 +410,191 @@
         </div>
     </div>
 
-    
+    <!--Lista horizontal-->
+    <div class="col-sm-9">
+
+        <div class="well">
+
+            <center>
+            <ul >
+              
+                <li style="display: inline;"><a href="/admin/comprarCreate"><button class="btn btn-success btn-lg px-3">Agregar Comprar</button></a></li>
+
+                <li style="display: inline;"><a href="/admin/comprarReporteActivo"><button class="btn btn-success btn-lg px-3">Reporte Compras exitosas</button></a></li>
+
+                <li style="display: inline;"><a href="/admin/comprarReporteInactivo"><button class="btn btn-success btn-lg px-3">Reporte Compras Canceladas</button></a></li>
+
+            </ul>
+
+            
+              
+           
+          </center>
+          
+
+        </div>
+
+    </div>
 
 
 
     <!-- tabla de registro-->
-
     <div class="col-sm-9">
         <div class="well">
-            <form action="/saveUsuario" method="POST">
-                <label>Ingresa datos para la cuenta.</label>
-                <br><br><br>
-    
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label>Usuario</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <br>
-    
-    
-                        <div class="mb-3">
-                            <label>Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <br>
+          
 
-                        <div class="mb-3">
-                            <label for="rol_idRol">Rol</label>
-                            <br>
-                            <select id="rol_idRol" name="rol_idRol" class="form-control" >
-                                
-                                <option value="1">Administrador</option>
-                                <option value="2">Mecánico</option>
-                                
-                                
-                            </select>
-                        </div>
-                        <br>
+            <div  >    
+                
+               
+               
+              <table class="table table-bordered table-striped text-center mt-4" id="tuTabla">
 
-                        <div class="mb-3">
-                            <label for="dpi" class="form-label">Dpi</label>
-                            <input type="text" class="form-control" id="dpi" name="dpi" tabindex="1" required>
-                        </div>
-                        <br>
+                
+                
+                <thead>
+                    
+                    <form id="filterForm" method="GET" action="/admin/comprar">
+                        <tr class="bg-primary text-white">
+                            
+                            <!-- Columna para el ID de la compra -->
+                            <th scope="col" style="text-align:center; background-color: #efbc1c;">ID<br>
+                            </th>
+                            
+                            <!-- Columna para el código de la compra -->
+                            <th scope="col" style="text-align: center; background-color: #efbc1c;">Código<br>
+                                <input type="text" name="codigo" style="color: black;" value="<%= codigo %>" placeholder="Buscar Código" id="filterCodigo">
+                            </th>
+                            
+                            <!-- Columna para la fecha de la compra -->
+                            <th scope="col" style="text-align: center; background-color: #efbc1c;">Fecha<br>
+                                <input type="text" name="fecha" style="color: black;" value="<%= fecha %>" placeholder="Buscar Fecha" id="filterFecha">
+                            </th>
+                            
+                            <!-- Columna para el estado de la compra -->
+                            <th scope="col" style="text-align: center; background-color: #efbc1c;">Estado<br>
+                                <input type="text" name="estado" style="color: black;" value="<%= estado %>" placeholder="Buscar Estado" id="filterEstado">
+                            </th>
+                            
+                            <!-- Columna para las acciones -->
+                            <th scope="col" style="text-align:center; background-color: #efbc1c;">Acciones<br></th>
+                        </tr>
+                    
+                        <button type="submit" style="display: none;"></button> <!-- Botón oculto para enviar el formulario -->
+                    </form>
+                    
+                    
+                
+                
+                    
+                
+                
 
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" tabindex="1" required>
-                        </div>
-                        <br>
+                </thead>
+                
+                  
 
 
-                    </div>
-                    <!--aca termina la columna de la izquierda-->
+
+                  <tbody>
+                    
+
+                    <% results.forEach((compra) => { %>
+                        <tr>
+                            <!-- Mostrar el ID de la compra -->
+                            <td><%= compra.idCompra %></td>
+                    
+                            <!-- Mostrar el código de la compra -->
+                            <td><%= compra.codigo %></td>
+                    
+                            <!-- Mostrar la fecha de la compra -->
+                            <td><%= compra.fecha.toISOString().split('T')[0] %></td> <!-- Esto formatea la fecha a YYYY-MM-DD -->
+                    
+                            <% const estadoLabelsCompra = { 
+                                1: 'PENDIENTE',
+                                2: 'COMPLETADA',
+                                3: 'CANCELADA',
+                                4: 'DEVUELTA'
+                            }; %>
+                            
+                            <!-- Supongamos que 'estadoCompra' es la columna donde recibes el id del estado de la compra -->
+                            <td><%= estadoLabelsCompra[compra.estado_compra_idEstadoCompra] %></td> <!-- Mostrar el estado basado en el código -->
+                            
+                    
+                            <td>
+                                <!-- Generar reporte de la compra -->
+                                <a href="/admin/comprarReporte/<%= compra.idCompra %>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                    </svg>
+                                </a>
+                    
+                                &nbsp;&nbsp;
+                    
+                                <!-- Editar compra -->
+                                <a href="/admin/comprarEdit/<%= compra.idCompra %>" class="btn btn-outline-info"><i class='bx bxs-edit'></i></a>
+                    
+                                <!-- Eliminar compra -->
+                                <a href="#" class="btn btn-outline-danger btnEliminarCompra" data-idcompra="<%= compra.idCompra %>">
+                                    <i class='bx bxs-trash-alt'></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                    
+                    
+                  
+                  
+                  
+                  
 
                     
-    
-                    <div class="col-md-6">
-                        
-                        
-    
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Telefono</label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="puesto" class="form-label">Puesto</label>
-                            <input type="text" class="form-control" id="puesto" name="puesto" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                          <label for="sueldo" class="form-label">Sueldo</label>
-                          <input type="text" class="form-control" id="sueldo" name="sueldo" tabindex="1" required>
-                          </div>
-                        <br>
+                       
 
 
-    
-                        
-    
-                        <div class="mb-3">
-                            <label for="fechaNac" class="form-label">Fecha de nacimiento</label>
-                            <input type="date" class="form-control" id="fechaNac" name="fechaNac" tabindex="1" required>
-                        </div>
-                        <br>
+                </tbody>
+                
+                
+              </table>
 
-                        <div class="mb-3">
-                            <label for="fechaContratacion" class="form-label">Fecha de contratación</label>
-                            <input type="date" class="form-control" id="fechaContratacion" name="fechaContratacion" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                          
-                    </div>
-                </div>
-    
-                <br><br>
-    
-                <center>
-                    <button type="submit" class="btn btn-success btn-lg px-3" tabindex="5">Guardar</button>
-                    <a href="/admin/usuario" class="btn btn-danger btn-lg px-3">Cancelar</a>
-                </center>
-            </form>
+              <center>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <% if (paginaActual > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/admin/comprar?pagina=<%= paginaActual - 1 %>&codigo=<%= codigo %>&fecha=<%= fecha %>&estado=<%= estado %>">Anterior</a>
+                            </li>
+                        <% } %>
+                    
+                        <% for (let i = 1; i <= totalPaginas; i++) { %>
+                            <li class="page-item <%= i === paginaActual ? 'active' : '' %>">
+                                <a class="page-link" href="/admin/comprar?pagina=<%= i %>&codigo=<%= codigo %>&fecha=<%= fecha %>&estado=<%= estado %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                    
+                        <% if (paginaActual < totalPaginas) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/admin/comprar?pagina=<%= paginaActual + 1 %>&codigo=<%= codigo %>&fecha=<%= fecha %>&estado=<%= estado %>">Siguiente</a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            </center>
             
+              
+              
+              
+              
+  
+                              
+
+
+
+              </div>
+
+
+
         </div>
-    </div>
-    
-    
+      </div>
 <!-- tabla de registro-->
 
 
@@ -563,51 +641,96 @@
 
 </footer>
 <!-- End Footer -->
-
-
-
 <script>
-  // Obtén los elementos de entrada (input) para filtrar
-  const filterID = document.getElementById("filterID");
-  const filterUsername = document.getElementById("filterUsername");
-  const filterTipoCuenta = document.getElementById("filterTipoCuenta");
+    let typingTimer; // Temporizador para "debouncing"
+    const typingInterval = 500; // Intervalo de espera antes de enviar (en milisegundos)
 
-  // Obtén la tabla que deseas filtrar
-  const table = document.getElementById("tuTabla"); // Asegúrate de reemplazar "tuTabla" con el ID de tu tabla.
+    // Obtén el formulario y los campos de entrada
+    const form = document.getElementById("filterForm");
+    const filterCodigo = document.getElementById("filterCodigo"); // Filtro para código
+    const filterFecha = document.getElementById("filterFecha"); // Filtro para fecha
+    const filterEstado = document.getElementById("filterEstado"); // Filtro para estado
 
-  // Agrega eventos de escucha para los campos de filtro
-  filterID.addEventListener("input", filterTable);
-  filterUsername.addEventListener("input", filterTable);
-  filterTipoCuenta.addEventListener("input", filterTable);
-
-  // Función para filtrar la tabla
-  function filterTable() {
-    const filterIDValue = filterID.value.toUpperCase();
-    const filterUsernameValue = filterUsername.value.toUpperCase();
-    const filterTipoCuentaValue = filterTipoCuenta.value.toUpperCase();
-
-    const rows = table.getElementsByTagName("tr");
-
-    for (let row of rows) {
-      const cells = row.getElementsByTagName("td");
-      if (cells.length >= 3) {
-        const id = cells[0].textContent || cells[0].innerText;
-        const username = cells[1].textContent || cells[1].innerText;
-        const tipoCuenta = cells[2].textContent || cells[2].innerText;
-
-        if (
-          id.toUpperCase().includes(filterIDValue) &&
-          username.toUpperCase().includes(filterUsernameValue) &&
-          tipoCuenta.toUpperCase().includes(filterTipoCuentaValue)
-        ) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      }
+    // Función para enviar el formulario automáticamente
+    function submitForm() {
+        clearTimeout(typingTimer); // Limpiar el temporizador anterior
+        typingTimer = setTimeout(() => {
+            form.submit(); // Enviar el formulario después del tiempo de espera
+        }, typingInterval);
     }
-  }
+
+    // Agregar eventos input a cada campo para que el formulario se envíe automáticamente después de un retraso
+    filterCodigo.addEventListener("input", submitForm);
+    filterFecha.addEventListener("input", submitForm);
+    filterEstado.addEventListener("input", submitForm); // Cambiado a filterEstado
 </script>
+
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    // Seleccionar todos los botones con la clase btnAnularCompra
+    document.querySelectorAll('.btnAnularCompra').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Evitar que el enlace redirija automáticamente
+  
+            // Obtener el idCompra desde el atributo data-idcompra
+            const idCompra = this.getAttribute('data-idcompra');
+  
+            // Mostrar la alerta de confirmación
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¿Deseas anular esta compra?", // Cambiado a "anular compra"
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, anular', // Cambiado a "anular"
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, realizar la solicitud para anular la compra
+                    fetch(`/admin/compraAnular/${idCompra}`, {
+                        method: 'GET'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al anular la compra.'); // Cambiado a "anular"
+                        }
+                        // Mostrar mensaje de éxito
+                        Swal.fire(
+                            '¡Compra anulada!', // Cambiado a "anulada"
+                            'La compra ha sido anulada exitosamente.', // Cambiado a "anulada"
+                            'success'
+                        ).then(() => {
+                            // Redirigir a la vista de compras tras la anulación
+                            window.location.href = '/admin/compra';
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error al anular la compra:', error); // Cambiado a "anular"
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Ocurrió un problema al anular la compra.', // Cambiado a "anular"
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    });
+                }
+            });
+        });
+    });
+  </script>
+  
+
+
+  
+  
+
+
+
+
+
 
 
 

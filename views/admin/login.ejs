@@ -192,6 +192,12 @@ img {
     box-shadow: 0 0 0 3px rgba(121, 82, 179, 0.25);
 }
 
+.icono-login {
+  width: 150px; /* Adjust the width to your desired size */
+  height: 150px; /* Adjust the height to your desired size */
+  color: #efbc1c;
+}
+
 
 </style>
 
@@ -298,7 +304,12 @@ img {
     <div class="col-md-6 m-auto">
         <div style="background-color: #d3d3d3; padding: 20px; border-radius: 10px;">
             <center>
-                <img src="/img/usuario.png" alt="">
+                <!--<img src="/img/usuario.png" alt="">-->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icono-login">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  </svg>
+                  
+
             </center>
 			<br>
             <h2 class="text-center">Iniciar Sesión</h2>
@@ -427,6 +438,21 @@ img {
     <script src="/js/templatemo.js"></script>
     <script src="/js/custom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Mostrar la alerta si hay un error -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <% if (typeof error !== 'undefined') { %>
+        <script>
+            Swal.fire({
+                title: 'Error',
+                text: "<%= error %>",
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        </script>
+    <% } %>
 
     <!-- End Script -->
     

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Usuarios</title>
+  <title>Categorias</title>
   <link rel="shortcut icon" type="image/x-icon" href="/img/logo.jpg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -335,9 +335,9 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href="/admin/dashboard">Inicio</a></li>
-        <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
         <li><a href="/admin/empleado">Empleados</a></li>
-        <li><a href="/admin/categoria">Categorias</a></li>
+        <li class="active"><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
         <li><a href="/admin/comprar">Comprar Producto</a></li>
@@ -360,9 +360,9 @@
         <br>
         <ul class="nav nav-pills nav-stacked">
           <li><a href="/admin/dashboard">Inicio</a></li>
-          <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+          <li><a href="/admin/usuario">Usuarios</a></li>
           <li><a href="/admin/empleado">Empleados</a></li>
-          <li><a href="/admin/categoria">Categorias</a></li>
+          <li class="active"><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
         <li><a href="/admin/comprar">Comprar Producto</a></li>
@@ -376,8 +376,8 @@
 
     <div class="col-sm-6">
         <div class="well">
-          <h4>Usuarios</h4>
-          <p>Aqui ingresaras usuarios nuevos al sistema.</p>
+          <h4>Categorias</h4>
+          <p>Aqui ingresaras categorias nuevas al sistema.</p>
         </div>
     </div>
 
@@ -401,115 +401,25 @@
 
     <div class="col-sm-9">
         <div class="well">
-            <form action="/saveUsuario" method="POST">
-                <label>Ingresa datos para la cuenta.</label>
-                <br><br><br>
-    
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label>Usuario</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <br>
-    
-    
-                        <div class="mb-3">
-                            <label>Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <br>
+            <form action="/saveCategoria" method="POST">
+                
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1" required>
+                    </div> 
+                    <br>
 
-                        <div class="mb-3">
-                            <label for="rol_idRol">Rol</label>
-                            <br>
-                            <select id="rol_idRol" name="rol_idRol" class="form-control" >
-                                
-                                <option value="1">Administrador</option>
-                                <option value="2">Mecánico</option>
-                                
-                                
-                            </select>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="dpi" class="form-label">Dpi</label>
-                            <input type="text" class="form-control" id="dpi" name="dpi" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" tabindex="1" required>
-                        </div>
-                        <br>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea type="text" class="form-control" id="descripcion" name="descripcion" tabindex="1" required rows="8"></textarea>
+                    </div>  
+                    <br>
+                    <br>
 
 
-                    </div>
-                    <!--aca termina la columna de la izquierda-->
-
-                    
-    
-                    <div class="col-md-6">
-                        
-                        
-    
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Telefono</label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="puesto" class="form-label">Puesto</label>
-                            <input type="text" class="form-control" id="puesto" name="puesto" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                          <label for="sueldo" class="form-label">Sueldo</label>
-                          <input type="text" class="form-control" id="sueldo" name="sueldo" tabindex="1" required>
-                          </div>
-                        <br>
-
-
-    
-                        
-    
-                        <div class="mb-3">
-                            <label for="fechaNac" class="form-label">Fecha de nacimiento</label>
-                            <input type="date" class="form-control" id="fechaNac" name="fechaNac" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="fechaContratacion" class="form-label">Fecha de contratación</label>
-                            <input type="date" class="form-control" id="fechaContratacion" name="fechaContratacion" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                          
-                    </div>
-                </div>
-    
-                <br><br>
-    
                 <center>
                     <button type="submit" class="btn btn-success btn-lg px-3" tabindex="5">Guardar</button>
-                    <a href="/admin/usuario" class="btn btn-danger btn-lg px-3">Cancelar</a>
+                    <a href="/admin/categoria" class="btn btn-danger btn-lg px-3">Cancelar</a>
                 </center>
             </form>
             

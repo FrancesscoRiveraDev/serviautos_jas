@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Usuarios</title>
+  <title>Marcas</title>
   <link rel="shortcut icon" type="image/x-icon" href="/img/logo.jpg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -256,10 +256,10 @@
         font-size: 20px; /* Ajusta el tamaño según tus necesidades */
     }
 
-    .btn-bad {
-  background-color: #ff073d !important;
-  border-color: #ff073d !important;
-  color: #fff;
+    .icon-small {
+  width: 20px; /* Adjust the width to your desired size */
+  height: 20px; /* Adjust the height to your desired size */
+  color: #efbc1c;
 }
 
 .icono-salir {
@@ -267,6 +267,23 @@
   height: 70px; /* Adjust the height to your desired size */
   color: #efbc1c;
 }
+
+/* Estilo para el botón de la página activa */
+.pagination .page-item.active .page-link {
+    background-color: #f2921a; /* Color de fondo para el botón activo */
+    border-color: #f2921a;     /* Color del borde del botón activo */
+    color: white;              /* Color del texto para el botón activo */
+}
+
+/* Opcional: cambiar el color de hover y focus en el botón activo */
+.pagination .page-item.active .page-link:hover,
+.pagination .page-item.active .page-link:focus {
+    background-color: #e57b15; /* Un tono más oscuro al hacer hover/focus */
+    border-color: #e57b15;
+    color: white;
+}
+
+
 
 
 </style>
@@ -335,10 +352,10 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href="/admin/dashboard">Inicio</a></li>
-        <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
         <li><a href="/admin/empleado">Empleados</a></li>
         <li><a href="/admin/categoria">Categorias</a></li>
-        <li><a href="/admin/marca">Marcas</a></li>
+        <li class="active"><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
         <li><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
@@ -360,15 +377,15 @@
         <br>
         <ul class="nav nav-pills nav-stacked">
           <li><a href="/admin/dashboard">Inicio</a></li>
-          <li class="active"><a href="/admin/usuario">Usuarios</a></li>
+          <li><a href="/admin/usuario">Usuarios</a></li>
           <li><a href="/admin/empleado">Empleados</a></li>
           <li><a href="/admin/categoria">Categorias</a></li>
-        <li><a href="/admin/marca">Marcas</a></li>
-        <li><a href="/admin/producto">Productos</a></li>
-        <li><a href="/admin/comprar">Comprar Producto</a></li>
-        <li><a href="/admin/proveedor">Proveedores</a></li>
-        <li><a href="/admin/orden">Ordenes</a></li>
-        <li><a href="/admin/mensaje">Mensajes</a></li>
+            <li class="active"><a href="/admin/marca">Marcas</a></li>
+            <li><a href="/admin/producto">Productos</a></li>
+            <li><a href="/admin/comprar">Comprar Producto</a></li>
+            <li><a href="/admin/proveedor">Proveedores</a></li>
+            <li><a href="/admin/orden">Ordenes</a></li>
+            <li><a href="/admin/mensaje">Mensajes</a></li>
         </ul><br>
       </div>
     </nav>
@@ -376,8 +393,8 @@
 
     <div class="col-sm-6">
         <div class="well">
-          <h4>Usuarios</h4>
-          <p>Aqui ingresaras usuarios nuevos al sistema.</p>
+          <h4>Marcas</h4>
+          <p>Aqui se encuentran todas las marcas registradas.</p>
         </div>
     </div>
 
@@ -393,130 +410,161 @@
         </div>
     </div>
 
-    
+    <!--Lista horizontal-->
+    <div class="col-sm-9">
+
+        <div class="well">
+
+            <center>
+            <ul >
+              
+                <li style="display: inline;"><a href="/admin/marcaCreate"><button class="btn btn-success btn-lg px-3">Agregar Marca</button></a></li>
+
+                <li style="display: inline;"><a href="/admin/marcaReporteTodos"><button class="btn btn-success btn-lg px-3">Reporte de Marcas</button></a></li>
+
+               
+
+            </ul>
+
+            
+              
+           
+          </center>
+          
+
+        </div>
+
+    </div>
 
 
 
     <!-- tabla de registro-->
-
     <div class="col-sm-9">
         <div class="well">
-            <form action="/saveUsuario" method="POST">
-                <label>Ingresa datos para la cuenta.</label>
-                <br><br><br>
-    
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label>Usuario</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <br>
-    
-    
-                        <div class="mb-3">
-                            <label>Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <br>
+          
 
-                        <div class="mb-3">
-                            <label for="rol_idRol">Rol</label>
-                            <br>
-                            <select id="rol_idRol" name="rol_idRol" class="form-control" >
+            <div  >    
+                
+               
+               
+              <table class="table table-bordered table-striped text-center mt-4" id="tuTabla">
+
+                
+                
+                <thead>
+                    
+                    <form id="filterForm" method="GET" action="/admin/marca">
+                        <tr class="bg-primary text-white">
+                            <th scope="col" style="text-align:center; background-color: #efbc1c;">ID<br></th>
+                            
+                            <th scope="col" style="text-align: center; background-color: #efbc1c;">Nombre<br>
+                                <input type="text" name="nombre" style="color: black;" value="<%= nombre %>" placeholder="Buscar Nombre" id="filterNombre">
+                            </th>
+                            
+                            
+                            <th scope="col" style="text-align:center; background-color: #efbc1c;">Acciones<br></th>
+                        </tr>
+                        <button type="submit" style="display: none;"></button> <!-- Botón oculto para enviar el formulario -->
+                    </form>
+                    
+                
+                
+
+                </thead>
+                
+                  
+
+
+
+                  <tbody>
+                    <% results.forEach((marca) => { %>
+                        <tr>
+                            <td><%= marca.idMarca %></td>
+                            <td><%= marca.nombre%></td>
+                
+                            
+                
+                            
+
+
+                           
+              
+                          
+
+
+
+                            <td>
+                              <a href="/admin/marcaReporte/<%= marca.idMarca %>">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-small">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                            </a>
+
+                            &nbsp;
+
+                            
+                                <a href="/admin/marcaEdit/<%= marca.idMarca %>" class="btn btn-outline-info"><i class='bx bxs-edit'></i></a>
+
+
+                                <a href="#" class="btn btn-outline-danger btnEliminarMarca" data-idMarca="<%= marca.idMarca %>">
+                                  <i class='bx bxs-trash-alt'></i>
+                              </a>
+                              
+
                                 
-                                <option value="1">Administrador</option>
-                                <option value="2">Mecánico</option>
-                                
-                                
-                            </select>
-                        </div>
-                        <br>
 
-                        <div class="mb-3">
-                            <label for="dpi" class="form-label">Dpi</label>
-                            <input type="text" class="form-control" id="dpi" name="dpi" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" tabindex="1" required>
-                        </div>
-                        <br>
+                              </td>
+                         
 
 
-                    </div>
-                    <!--aca termina la columna de la izquierda-->
+                        </tr>
+                    <% }) %>
 
                     
-    
-                    <div class="col-md-6">
-                        
-                        
-    
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Telefono</label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                            <label for="puesto" class="form-label">Puesto</label>
-                            <input type="text" class="form-control" id="puesto" name="puesto" tabindex="1" required>
-                        </div>
-                        <br>
-
-                        <div class="mb-3">
-                          <label for="sueldo" class="form-label">Sueldo</label>
-                          <input type="text" class="form-control" id="sueldo" name="sueldo" tabindex="1" required>
-                          </div>
-                        <br>
+                       
 
 
-    
-                        
-    
-                        <div class="mb-3">
-                            <label for="fechaNac" class="form-label">Fecha de nacimiento</label>
-                            <input type="date" class="form-control" id="fechaNac" name="fechaNac" tabindex="1" required>
-                        </div>
-                        <br>
+                </tbody>
+                
+                
+              </table>
 
-                        <div class="mb-3">
-                            <label for="fechaContratacion" class="form-label">Fecha de contratación</label>
-                            <input type="date" class="form-control" id="fechaContratacion" name="fechaContratacion" tabindex="1" required>
-                        </div>
-                        <br>
-    
-                          
-                    </div>
-                </div>
-    
-                <br><br>
-    
+                                            <!-- Paginación para la tabla de marca -->
                 <center>
-                    <button type="submit" class="btn btn-success btn-lg px-3" tabindex="5">Guardar</button>
-                    <a href="/admin/usuario" class="btn btn-danger btn-lg px-3">Cancelar</a>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <% if (paginaActual > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/admin/marca?pagina=<%= paginaActual - 1 %>&nombre=<%= nombre %>">Anterior</a>
+                            </li>
+                            <% } %>
+
+                            <% for (let i = 1; i <= totalPaginas; i++) { %>
+                            <li class="page-item <%= i === paginaActual ? 'active' : '' %>">
+                                <a class="page-link" href="/admin/marca?pagina=<%= i %>&nombre=<%= nombre %>"><%= i %></a>
+                            </li>
+                            <% } %>
+
+                            <% if (paginaActual < totalPaginas) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/admin/marca?pagina=<%= paginaActual + 1 %>&nombre=<%= nombre %>">Siguiente</a>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </nav>
                 </center>
-            </form>
-            
+
+  
+                              
+
+
+
+              </div>
+
+
+
         </div>
-    </div>
-    
-    
+      </div>
 <!-- tabla de registro-->
 
 
@@ -566,48 +614,66 @@
 
 
 
+
 <script>
-  // Obtén los elementos de entrada (input) para filtrar
-  const filterID = document.getElementById("filterID");
-  const filterUsername = document.getElementById("filterUsername");
-  const filterTipoCuenta = document.getElementById("filterTipoCuenta");
-
-  // Obtén la tabla que deseas filtrar
-  const table = document.getElementById("tuTabla"); // Asegúrate de reemplazar "tuTabla" con el ID de tu tabla.
-
-  // Agrega eventos de escucha para los campos de filtro
-  filterID.addEventListener("input", filterTable);
-  filterUsername.addEventListener("input", filterTable);
-  filterTipoCuenta.addEventListener("input", filterTable);
-
-  // Función para filtrar la tabla
-  function filterTable() {
-    const filterIDValue = filterID.value.toUpperCase();
-    const filterUsernameValue = filterUsername.value.toUpperCase();
-    const filterTipoCuentaValue = filterTipoCuenta.value.toUpperCase();
-
-    const rows = table.getElementsByTagName("tr");
-
-    for (let row of rows) {
-      const cells = row.getElementsByTagName("td");
-      if (cells.length >= 3) {
-        const id = cells[0].textContent || cells[0].innerText;
-        const username = cells[1].textContent || cells[1].innerText;
-        const tipoCuenta = cells[2].textContent || cells[2].innerText;
-
-        if (
-          id.toUpperCase().includes(filterIDValue) &&
-          username.toUpperCase().includes(filterUsernameValue) &&
-          tipoCuenta.toUpperCase().includes(filterTipoCuentaValue)
-        ) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      }
+    let typingTimer; // Temporizador para "debouncing"
+    const typingInterval = 500; // Intervalo de espera antes de enviar (en milisegundos)
+  
+    // Obtén el formulario y los campos de entrada
+    const form = document.getElementById("filterForm");
+    const filterNombre = document.getElementById("filterNombre");
+  
+    // Función para enviar el formulario automáticamente
+    function submitForm() {
+      clearTimeout(typingTimer); // Limpiar el temporizador anterior
+      typingTimer = setTimeout(() => {
+        form.submit(); // Enviar el formulario después del tiempo de espera
+      }, typingInterval);
     }
-  }
+  
+    // Agregar eventos input a cada campo para que el formulario se envíe automáticamente después de un retraso
+    filterNombre.addEventListener("input", submitForm);
 </script>
+
+  
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Selecciona todos los botones con la clase 'btnEliminarMarca'
+    document.querySelectorAll('.btnEliminarMarca').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+            
+            const idMarca = this.getAttribute('data-idMarca'); // Obtiene el id de la marca
+            
+            // Muestra el cuadro de confirmación de SweetAlert2
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¿Deseas eliminar esta marca?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, redirige a la ruta de eliminación
+                    window.location.href = `/admin/marcaDelete/${idMarca}`;
+                }
+            });
+        });
+    });
+</script>
+
+  
+
+
+
+
+
 
 
 

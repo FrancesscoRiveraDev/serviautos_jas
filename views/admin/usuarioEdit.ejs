@@ -341,6 +341,7 @@
         <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
+        <li><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
         <li><a href="/admin/mensaje">Mensajes</a></li>
@@ -365,6 +366,7 @@
           <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
+        <li><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
         <li><a href="/admin/mensaje">Mensajes</a></li>
@@ -376,7 +378,7 @@
     <div class="col-sm-6">
         <div class="well">
           <h4>Usuarios</h4>
-          <p>Aqui se encuentran todos los usuarios registrados.</p>
+          <p>Aqui podras editar toda la información de los usuarios registrados.</p>
         </div>
     </div>
 
@@ -439,19 +441,19 @@
             
                                 <div class="mb-3">
                                     <label for="dpi" class="form-label">Dpi</label>
-                                    <input type="text" class="form-control" id="dpi" name="dpi" value="<%= empleado.dpi %>" tabindex="1">
+                                    <input type="text" class="form-control" id="dpi" name="dpi" value="<%= empleado.dpi %>" tabindex="1" required> 
                                 </div>
                                 <br>
             
                                 <div class="mb-3">
                                     <label for="nombre" class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" value="<%= empleado.nombre %>" tabindex="1">
+                                    <input type="text" class="form-control" id="nombre" name="nombre" value="<%= empleado.nombre %>" tabindex="1" required>
                                 </div>
                                 <br>
             
                                 <div class="mb-3">
                                     <label for="apellido" class="form-label">Apellido</label>
-                                    <input type="text" class="form-control" id="apellido" name="apellido" value="<%= empleado.apellido %>" tabindex="1">
+                                    <input type="text" class="form-control" id="apellido" name="apellido" value="<%= empleado.apellido %>" tabindex="1" required>
                                 </div>
                                 <br>
                             </div>
@@ -461,25 +463,25 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="telefono" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="telefono" name="telefono" value="<%= empleado.telefono %>" tabindex="1">
+                                    <input type="text" class="form-control" id="telefono" name="telefono" value="<%= empleado.telefono %>" tabindex="1" required>
                                 </div>
                                 <br>
             
                                 <div class="mb-3">
                                     <label for="direccion" class="form-label">Dirección</label>
-                                    <input type="text" class="form-control" id="direccion" name="direccion" value="<%= empleado.direccion %>" tabindex="1">
+                                    <input type="text" class="form-control" id="direccion" name="direccion" value="<%= empleado.direccion %>" tabindex="1" required>
                                 </div>
                                 <br>
             
                                 <div class="mb-3">
                                     <label for="puesto" class="form-label">Puesto</label>
-                                    <input type="text" class="form-control" id="puesto" name="puesto" value="<%= empleado.puesto %>" tabindex="1">
+                                    <input type="text" class="form-control" id="puesto" name="puesto" value="<%= empleado.puesto %>" tabindex="1" required>
                                 </div>
                                 <br>
             
                                 <div class="mb-3">
                                     <label for="sueldo" class="form-label">Sueldo</label>
-                                    <input type="text" class="form-control" id="sueldo" name="sueldo" value="<%= empleado.sueldo %>" tabindex="1">
+                                    <input type="text" class="form-control" id="sueldo" name="sueldo" value="<%= empleado.sueldo %>" tabindex="1" required>
                                 </div>
                                 <br>
 

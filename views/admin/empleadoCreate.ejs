@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Usuarios</title>
+  <title>Empleados</title>
   <link rel="shortcut icon" type="image/x-icon" href="/img/logo.jpg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -335,8 +335,8 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href="/admin/dashboard">Inicio</a></li>
-        <li class="active"><a href="/admin/usuario">Usuarios</a></li>
-        <li><a href="/admin/empleado">Empleados</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
+        <li class="active"><a href="/admin/empleado">Empleados</a></li>
         <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
@@ -360,8 +360,8 @@
         <br>
         <ul class="nav nav-pills nav-stacked">
           <li><a href="/admin/dashboard">Inicio</a></li>
-          <li class="active"><a href="/admin/usuario">Usuarios</a></li>
-          <li><a href="/admin/empleado">Empleados</a></li>
+          <li><a href="/admin/usuario">Usuarios</a></li>
+          <li class="active"><a href="/admin/empleado">Empleados</a></li>
           <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
@@ -376,8 +376,8 @@
 
     <div class="col-sm-6">
         <div class="well">
-          <h4>Usuarios</h4>
-          <p>Aqui ingresaras usuarios nuevos al sistema.</p>
+          <h4>Empleados</h4>
+          <p>Aqui ingresaras empleados nuevos al sistema.</p>
         </div>
     </div>
 
@@ -401,7 +401,7 @@
 
     <div class="col-sm-9">
         <div class="well">
-            <form action="/saveUsuario" method="POST">
+            <form action="/saveEmpleado" method="POST">
                 <label>Ingresa datos para la cuenta.</label>
                 <br><br><br>
     
@@ -509,7 +509,7 @@
     
                 <center>
                     <button type="submit" class="btn btn-success btn-lg px-3" tabindex="5">Guardar</button>
-                    <a href="/admin/usuario" class="btn btn-danger btn-lg px-3">Cancelar</a>
+                    <a href="/admin/empleado" class="btn btn-danger btn-lg px-3">Cancelar</a>
                 </center>
             </form>
             

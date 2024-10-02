@@ -268,6 +268,22 @@
   color: #efbc1c;
 }
 
+/* Estilo para el botón de la página activa */
+.pagination .page-item.active .page-link {
+    background-color: #f2921a; /* Color de fondo para el botón activo */
+    border-color: #f2921a;     /* Color del borde del botón activo */
+    color: white;              /* Color del texto para el botón activo */
+}
+
+/* Opcional: cambiar el color de hover y focus en el botón activo */
+.pagination .page-item.active .page-link:hover,
+.pagination .page-item.active .page-link:focus {
+    background-color: #e57b15; /* Un tono más oscuro al hacer hover/focus */
+    border-color: #e57b15;
+    color: white;
+}
+
+
 
 
 </style>
@@ -341,6 +357,7 @@
         <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
+        <li><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
         <li><a href="/admin/mensaje">Mensajes</a></li>
@@ -365,6 +382,7 @@
           <li><a href="/admin/categoria">Categorias</a></li>
         <li><a href="/admin/marca">Marcas</a></li>
         <li><a href="/admin/producto">Productos</a></li>
+        <li><a href="/admin/comprar">Comprar Producto</a></li>
         <li><a href="/admin/proveedor">Proveedores</a></li>
         <li><a href="/admin/orden">Ordenes</a></li>
         <li><a href="/admin/mensaje">Mensajes</a></li>
@@ -434,7 +452,15 @@
                 
                 
                 <thead>
+
+                  
                     
+                    
+                    
+                    
+                  
+                  
+                  <form id="filterForm" method="GET" action="/admin/usuario">
                     <tr class="bg-primary text-white">
 
                         <th scope="col" style="text-align:center; background-color: #efbc1c;">ID <br> 
@@ -442,15 +468,15 @@
                         </th>
                         
                         <th scope="col" style="text-align: center; background-color: #efbc1c;">USUARIO<br>
-                             <input type="text" style="color: black;" id="filterUsername">
+                          <input type="text" name="usuario" style="color: black;" value="<%= usuario %>" placeholder="Buscar Usuario" id="filterUsuario">
                         </th>
                       
                         <th scope="col" style="text-align:center; background-color: #efbc1c;">TIPO DE CUENTA <br>
-                            <input type="text" style="color: black;" id="filterTipoCuenta">
+                          <input type="text" name="tipoCuenta" style="color: black;" value="<%= tipoCuenta %>" placeholder="Buscar Tipo de Cuenta" id="filterTipoCuenta">
                         </th>
 
                         <th scope="col" style="text-align:center; background-color: #efbc1c;">ESTADO <br>
-                          <input type="text" style="color: black;" id="filterEstado">
+                          <input type="text" name="estado" style="color: black;" value="<%= estado %>" placeholder="Buscar Estado" id="filterEstado">
                       </th>
 
                         <th scope="col" style="text-align:center; background-color: #efbc1c;">ACCIONES<br>
@@ -459,8 +485,13 @@
 
 
                     </tr>
+                    <button type="submit" style="display: none;"></button> <!-- Botón oculto para enviar el formulario -->
+                  </form>
 
                 </thead>
+
+                
+                
                 
                   
 
@@ -510,7 +541,12 @@
                             &nbsp;
                             
                                 <a href="/admin/usuarioEdit/<%= usuario.idUsuario %>" class="btn btn-outline-info"><i class='bx bxs-edit'></i></a>
-                                <a href="/admin/usuarioDelete/<%= usuario.idUsuario %>" class="btn btn-outline-danger"><i class='bx bxs-trash-alt'></i></a>                   
+                                <a href="#" class="btn btn-outline-danger btnEliminarUsuario" data-idusuario="<%= usuario.idUsuario %>">
+                                  <i class='bx bxs-trash-alt'></i>
+                              </a>
+                              
+                              
+                               <!-- <a href="/admin/usuarioDelete/<%= usuario.idUsuario %>" class="btn btn-outline-danger"><i class='bx bxs-trash-alt'></i></a> -->                  
                               </td>
                          
 
@@ -526,6 +562,40 @@
                 
                 
               </table>
+
+              
+              
+
+                <center>
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                      <% if (paginaActual > 1) { %>
+                        <li class="page-item">
+                          <a class="page-link" href="/admin/usuario?pagina=<%= paginaActual - 1 %>&usuario=<%= usuario %>&tipoCuenta=<%= tipoCuenta %>&estado=<%= estado %>">Anterior</a>
+                        </li>
+                      <% } %>
+                  
+                      <% for (let i = 1; i <= totalPaginas; i++) { %>
+                        <li class="page-item <%= i === paginaActual ? 'active' : '' %>">
+                          <a class="page-link" href="/admin/usuario?pagina=<%= i %>&usuario=<%= usuario %>&tipoCuenta=<%= tipoCuenta %>&estado=<%= estado %>"><%= i %></a>
+                        </li>
+                      <% } %>
+                  
+                      <% if (paginaActual < totalPaginas) { %>
+                        <li class="page-item">
+                          <a class="page-link" href="/admin/usuario?pagina=<%= paginaActual + 1 %>&usuario=<%= usuario %>&tipoCuenta=<%= tipoCuenta %>&estado=<%= estado %>">Siguiente</a>
+                        </li>
+                      <% } %>
+                    </ul>
+                  </nav>
+                </center>
+                
+                
+                
+                
+              
+
+
               </div>
 
 
@@ -581,53 +651,32 @@
 
 
 
+
 <script>
-  // Obtén los elementos de entrada (input) para filtrar
-  
-  const filterUsername = document.getElementById("filterUsername");
+  let typingTimer; // Temporizador para "debouncing"
+  const typingInterval = 500; // Intervalo de espera antes de enviar (en milisegundos)
+
+  // Obtén el formulario y los campos de entrada
+  const form = document.getElementById("filterForm");
+  const filterUsuario = document.getElementById("filterUsuario");
   const filterTipoCuenta = document.getElementById("filterTipoCuenta");
   const filterEstado = document.getElementById("filterEstado");
 
-  // Obtén la tabla que deseas filtrar
-  const table = document.getElementById("tuTabla"); // Asegúrate de reemplazar "tuTabla" con el ID de tu tabla.
-
-  // Agrega eventos de escucha para los campos de filtro
-  
-  filterUsername.addEventListener("input", filterTable);
-  filterTipoCuenta.addEventListener("input", filterTable);
-  filterEstado.addEventListener("input", filterTable);
-
-  // Función para filtrar la tabla
-  function filterTable() {
-    
-    const filterUsernameValue = filterUsername.value.toUpperCase();
-    const filterTipoCuentaValue = filterTipoCuenta.value.toUpperCase();
-    const filterEstadoValue = filterEstado.value.toUpperCase();
-
-    const rows = table.getElementsByTagName("tr");
-
-    for (let row of rows) {
-      const cells = row.getElementsByTagName("td");
-      if (cells.length >= 4) {
-        
-        const username = cells[1].textContent || cells[1].innerText;
-        const tipoCuenta = cells[2].textContent || cells[2].innerText;
-        const estado = cells[3].textContent || cells[3].innerText;
-
-        if (
-          
-          username.toUpperCase().includes(filterUsernameValue) &&
-          tipoCuenta.toUpperCase().includes(filterTipoCuentaValue) &&
-          estado.toUpperCase().includes(filterEstadoValue) 
-        ) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      }
-    }
+  // Función para enviar el formulario automáticamente
+  function submitForm() {
+    clearTimeout(typingTimer); // Limpiar el temporizador anterior
+    typingTimer = setTimeout(() => {
+      form.submit(); // Enviar el formulario después del tiempo de espera
+    }, typingInterval);
   }
+
+  // Agregar eventos input a cada campo para que el formulario se envíe automáticamente después de un retraso
+  filterUsuario.addEventListener("input", submitForm);
+  filterTipoCuenta.addEventListener("input", submitForm);
+  filterEstado.addEventListener("input", submitForm);
 </script>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -679,6 +728,61 @@
                 });
         });
     });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // Seleccionar todos los botones con la clase btnEliminarUsuario
+  document.querySelectorAll('.btnEliminarUsuario').forEach(button => {
+      button.addEventListener('click', function(event) {
+          event.preventDefault(); // Evitar que el enlace redirija automáticamente
+
+          // Obtener el idUsuario desde el atributo data-idusuario
+          const idUsuario = this.getAttribute('data-idusuario');
+
+          // Mostrar la alerta de confirmación
+          Swal.fire({
+              title: '¿Estás seguro?',
+              text: "¿Deseas dar de baja a este usuario?",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Sí, dar de baja',
+              cancelButtonText: 'Cancelar'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  // Si el usuario confirma, realizar la solicitud para dar de baja al usuario
+                  fetch(`/admin/usuarioDelete/${idUsuario}`, {
+                      method: 'GET'
+                  })
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error('Error al actualizar el estado del usuario.');
+                      }
+                      // Mostrar mensaje de éxito
+                      Swal.fire(
+                          '¡Usuario dado de baja!',
+                          'El usuario ha sido dado de baja exitosamente.',
+                          'success'
+                      ).then(() => {
+                          // Redirigir a la vista de usuario tras la actualización
+                          window.location.href = '/admin/usuario';
+                      });
+                  })
+                  .catch(error => {
+                      console.error('Error al dar de baja al usuario:', error);
+                      Swal.fire({
+                          title: 'Error',
+                          text: 'Ocurrió un problema al dar de baja al usuario.',
+                          icon: 'error',
+                          confirmButtonText: 'Aceptar'
+                      });
+                  });
+              }
+          });
+      });
+  });
 </script>
 
 
