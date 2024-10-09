@@ -2772,6 +2772,130 @@ app.get('/admin/productoReporteInactivo', (req, res) => {
     });
 });
 
+
+
+
+//reporte de historico precio
+
+
+app.get('/admin/productoHistorico/:idProducto', (req, res) => {
+    const idProducto = req.params.idProducto;
+
+    // Consulta para obtener los datos del producto y el historial de precios
+    const queryProducto = `
+        SELECT p.idProducto, p.nombre, p.precioUnitario, p.precioSugerido, p.stock, 
+               c.nombre AS categoria, m.nombre AS marca, u.nombre AS unidadMedida,
+               e.nombre AS estadoProducto
+        FROM producto p
+        LEFT JOIN categoria c ON p.categoria_idCategoria = c.idCategoria
+        LEFT JOIN marca m ON p.marca_idMarca = m.idMarca
+        LEFT JOIN unidad_medida u ON p.unidad_medida_idUnidadMedida = u.idUnidadMedida
+        LEFT JOIN estado_producto e ON p.estado_producto_idEstadoProducto = e.idEstadoProducto
+        WHERE p.idProducto = ?;
+    `;
+
+    const queryHistoricoPrecio = `
+        SELECT hp.precioAnterior, hp.precioNuevo, hp.fechaCambio
+        FROM historico_precio hp
+        WHERE hp.producto_idProducto = ?
+        ORDER BY hp.fechaCambio DESC;
+    `;
+
+    // Ejecutar las consultas en paralelo
+    conexion.query(queryProducto, [idProducto], (error, productoResults) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).send('Error al obtener los datos del producto.');
+        }
+
+        if (productoResults.length === 0) {
+            return res.status(404).send('Producto no encontrado.');
+        }
+
+        const producto = productoResults[0];
+
+        // Consulta para el historial de precios del producto
+        conexion.query(queryHistoricoPrecio, [idProducto], (error, historicoResults) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).send('Error al obtener el historial de precios.');
+            }
+
+            // Función para formatear los precios
+            const formatPrecio = (precio) => {
+                return new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(precio);
+            };
+
+            // Crear un documento PDF
+            const doc = new PDFDocument();
+            res.setHeader('Content-Disposition', 'attachment; filename=reporte_' + producto.nombre + '.pdf');
+            res.setHeader('Content-Type', 'application/pdf');
+            doc.pipe(res);
+
+            // Ruta del logo de la empresa
+            const logoPath = path.join(__dirname, '/public/img/logo.jpg'); // Ajusta esta ruta según la ubicación de tu logo
+            
+            // Agregar el logo y la información de la empresa
+            doc.image(logoPath, { align: 'center', width: 100 }) // Ajusta las dimensiones y la posición según sea necesario
+               .fontSize(20)
+               .text('Serviautos Jas', { align: 'center' }) // Ajusta el nombre y la posición según sea necesario
+               .moveDown();
+
+            // Agregar título y detalles del producto
+            doc.fontSize(18).text('Reporte de Producto', { align: 'center' });
+            doc.moveDown();
+            doc.moveDown();
+
+            doc.fontSize(12).text(`ID Producto: ${producto.idProducto}`);
+            doc.text(`Nombre: ${producto.nombre}`);
+            doc.text(`Precio Unitario: ${formatPrecio(producto.precioUnitario)}`);
+            doc.text(`Precio Sugerido: ${formatPrecio(producto.precioSugerido)}`);
+            doc.text(`Stock: ${producto.stock}`);
+            doc.text(`Categoría: ${producto.categoria || 'N/A'}`);
+            doc.text(`Marca: ${producto.marca || 'N/A'}`);
+            doc.text(`Unidad de Medida: ${producto.unidadMedida || 'N/A'}`);
+            doc.text(`Estado: ${producto.estadoProducto || 'N/A'}`);
+
+            // Espacio para separar la información del producto y el historial de precios
+            doc.moveDown();
+            doc.fontSize(16).text('Historial de Precios', { align: 'center' });
+            doc.moveDown();
+
+            // Verificar si hay historial de precios
+            if (historicoResults.length === 0) {
+                doc.fontSize(12).text('No hay registros de historial de precios para este producto.');
+            } else {
+                // Agregar cada entrada del historial de precios
+                historicoResults.forEach((historico) => {
+                    doc.fontSize(12).text(`Fecha de Cambio: ${historico.fechaCambio}`);
+                    doc.text(`Precio Anterior: ${formatPrecio(historico.precioAnterior)}`);
+                    doc.text(`Precio Nuevo: ${formatPrecio(historico.precioNuevo)}`);
+                    doc.moveDown();
+                });
+            }
+
+            // Finalizar el PDF
+            doc.end();
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -2867,7 +2991,7 @@ app.get('/admin/comprar', (req, res) => {
 
 app.get('/admin/comprarCreate', (req, res) => {
 
-    const queryProducto = 'SELECT idProducto, nombre FROM producto';
+    const queryProducto = 'SELECT idProducto, nombre FROM producto WHERE estado_producto_idEstadoProducto = 1';
     const queryProveedor = 'SELECT idProveedor, nombre FROM proveedor WHERE estado_proveedor_idEstadoProveedor = 1';
     const queryTipoPago = 'SELECT idTipo_pago, tipo FROM tipo_pago';
 
@@ -2911,12 +3035,14 @@ app.get('/admin/comprarCreate', (req, res) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
 app.post('/saveComprar', (req, res) => {
     const { proveedor_idProveedor, tipo_pago, totalGlobal } = req.body;
     let { 'producto_idProducto[]': producto_idProducto, 'cantidad[]': cantidad, 'precioUnitario[]': precioUnitario } = req.body;
 
     const codigo = Math.floor(10000000 + Math.random() * 90000000);
-    const fecha = moment().tz("America/Guatemala").format('YYYY-MM-DD HH:mm:ss');
+    const fecha = moment().tz("America/Guatemala").format('YYYY-MM-DD HH:mm:ss'); // Utiliza la zona horaria de Guatemala
     const estado_compra_idEstadoCompra = 1; // Pendiente
 
     // Asegurarse de que los arrays sean tratados como tal
@@ -2950,8 +3076,8 @@ app.post('/saveComprar', (req, res) => {
             const queryDetalleCompra = `INSERT INTO detalle_compra (producto_idProducto, cantidad, precioUnitario, compra_idCompra) 
                                         VALUES (?, ?, ?, ?)`;
 
-            // Insertar los datos en 'detalle_compra'
             detalleQueries.push(new Promise((resolve, reject) => {
+                // Insertar los datos en 'detalle_compra'
                 conexion.query(queryDetalleCompra, [producto_idProducto[i], cantidad[i], precioUnitario[i], compra_idCompra], (err) => {
                     if (err) {
                         console.error('Error en detalle_compra:', err);
@@ -2959,14 +3085,15 @@ app.post('/saveComprar', (req, res) => {
                     }
 
                     // Obtener el precio actual del producto (precioAnterior)
-                    const queryGetPrecioAnterior = `SELECT precioUnitario FROM producto WHERE idProducto = ?`;
+                    const queryGetPrecioAnterior = `SELECT precioUnitario, stock FROM producto WHERE idProducto = ?`;
                     conexion.query(queryGetPrecioAnterior, [producto_idProducto[i]], (err, result) => {
                         if (err) {
-                            console.error('Error al obtener precioAnterior:', err);
+                            console.error('Error al obtener precioAnterior o stock:', err);
                             return reject(err);
                         }
 
                         const precioAnterior = result[0].precioUnitario;
+                        const stockActual = result[0].stock;
 
                         // Insertar en 'historico_precio'
                         const queryInsertHistorico = `INSERT INTO historico_precio (precioAnterior, precioNuevo, fechaCambio, producto_idProducto) 
@@ -2978,9 +3105,10 @@ app.post('/saveComprar', (req, res) => {
                                 return reject(err);
                             }
 
-                            // Actualizar 'precioUnitario' en la tabla 'producto'
-                            const queryUpdateProducto = `UPDATE producto SET precioUnitario = ? WHERE idProducto = ?`;
-                            conexion.query(queryUpdateProducto, [precioUnitario[i], producto_idProducto[i]], (err) => {
+                            // Actualizar 'precioUnitario' y 'stock' en la tabla 'producto'
+                            const queryUpdateProducto = `UPDATE producto SET precioUnitario = ?, stock = ? WHERE idProducto = ?`;
+                            const nuevoStock = stockActual + parseInt(cantidad[i], 10); // Sumar la cantidad al stock actual
+                            conexion.query(queryUpdateProducto, [precioUnitario[i], nuevoStock, producto_idProducto[i]], (err) => {
                                 if (err) {
                                     console.error('Error al actualizar producto:', err);
                                     return reject(err);
@@ -3005,6 +3133,204 @@ app.post('/saveComprar', (req, res) => {
             });
     });
 });
+
+////////////////////////////////////////////////
+//anular compra
+
+app.get('/admin/compraAnular/:idCompra', (req, res) => {
+    const idCompra = req.params.idCompra;
+
+    // Consulta para obtener los detalles de la compra
+    const queryDetalles = `
+        SELECT dc.producto_idProducto, dc.cantidad
+        FROM detalle_compra dc
+        WHERE dc.compra_idCompra = ?;
+    `;
+
+    // Consulta para anular la compra
+    const queryAnularCompra = `
+        UPDATE compra
+        SET estado_compra_idEstadoCompra = 2  
+        WHERE idCompra = ?;
+    `;
+
+    // Comenzar la transacción
+    conexion.beginTransaction(err => {
+        if (err) {
+            return res.status(500).send('Error al iniciar la transacción.');
+        }
+
+        // Obtener detalles de la compra
+        conexion.query(queryDetalles, [idCompra], (error, detallesResults) => {
+            if (error) {
+                return conexion.rollback(() => {
+                    res.status(500).send('Error al obtener los detalles de la compra.');
+                });
+            }
+
+            // Si no hay detalles, puedes enviar un mensaje indicando que no hay nada que anular
+            if (detallesResults.length === 0) {
+                return conexion.rollback(() => {
+                    res.status(404).send('No se encontraron detalles para anular esta compra.');
+                });
+            }
+
+            // Crear un array de consultas para restar del stock
+            const updateStockQueries = detallesResults.map(detalle => {
+                const { producto_idProducto, cantidad } = detalle;
+                return new Promise((resolve, reject) => {
+                    const queryActualizarStock = `
+                        UPDATE producto
+                        SET stock = stock - ?
+
+                        WHERE idProducto = ?;
+                    `;
+                    conexion.query(queryActualizarStock, [cantidad, producto_idProducto], (err) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve();
+                    });
+                });
+            });
+
+            // Esperar que todas las consultas para actualizar el stock se completen
+            Promise.all(updateStockQueries)
+                .then(() => {
+                    // Anular la compra
+                    conexion.query(queryAnularCompra, [idCompra], (error) => {
+                        if (error) {
+                            return conexion.rollback(() => {
+                                res.status(500).send('Error al anular la compra.');
+                            });
+                        }
+
+                        // Si todo es exitoso, confirmar la transacción
+                        conexion.commit(err => {
+                            if (err) {
+                                return conexion.rollback(() => {
+                                    res.status(500).send('Error al confirmar la transacción.');
+                                });
+                            }
+
+                            // Responder con éxito
+                            res.status(200).send('Compra anulada y stock actualizado exitosamente.');
+                        });
+                    });
+                })
+                .catch(err => {
+                    conexion.rollback(() => {
+                        res.status(500).send('Error al actualizar el stock de los productos.');
+                    });
+                });
+        });
+    });
+});
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+//reporte compra con detalle de compra
+app.get('/admin/comprarReporte/:idCompra', (req, res) => {
+    const idCompra = req.params.idCompra;
+
+    // Consulta para obtener los datos de la compra
+    const queryCompra = `
+        SELECT c.idCompra, c.fecha, c.codigo, c.total, 
+               p.nombre AS proveedor, e.nombre AS estadoCompra, tp.tipo AS tipoPago
+        FROM compra c
+        LEFT JOIN proveedor p ON c.proveedor_idProveedor = p.idProveedor
+        LEFT JOIN estado_compra e ON c.estado_compra_idEstadoCompra = e.idEstadoCompra
+        LEFT JOIN tipo_pago tp ON c.tipo_pago_idTipo_pago = tp.idTipo_pago
+        WHERE c.idCompra = ?;
+    `;
+
+    // Consulta para obtener los detalles de la compra
+    const queryDetalleCompra = `
+        SELECT dc.producto_idProducto, pr.nombre AS productoNombre, dc.cantidad, dc.precioUnitario, 
+               (dc.cantidad * dc.precioUnitario) AS precioTotal
+        FROM detalle_compra dc
+        LEFT JOIN producto pr ON dc.producto_idProducto = pr.idProducto
+        WHERE dc.compra_idCompra = ?;
+    `;
+
+    // Ejecutar la consulta principal de la compra
+    conexion.query(queryCompra, [idCompra], (error, compraResults) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).send('Error al obtener los datos de la compra.');
+        }
+
+        if (compraResults.length === 0) {
+            return res.status(404).send('Compra no encontrada.');
+        }
+
+        const compra = compraResults[0];
+
+        // Ejecutar la consulta para obtener los detalles de la compra
+        conexion.query(queryDetalleCompra, [idCompra], (error, detalleResults) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).send('Error al obtener los detalles de la compra.');
+            }
+
+            // Crear un documento PDF
+            const doc = new PDFDocument();
+            res.setHeader('Content-Disposition', 'attachment; filename=reporte_compra_' + compra.codigo + '.pdf');
+            res.setHeader('Content-Type', 'application/pdf');
+            doc.pipe(res);
+
+            // Ruta del logo de la empresa
+            const logoPath = path.join(__dirname, '/public/img/logo.jpg'); // Ajusta esta ruta según la ubicación de tu logo
+
+            // Agregar el logo y la información de la empresa
+            doc.image(logoPath, { align: 'center', width: 100 })
+               .fontSize(20)
+               .text('Serviautos Jas', { align: 'center' }) 
+               .moveDown();
+
+            // Agregar título y detalles de la compra
+            doc.fontSize(18).text('Reporte de Compra', { align: 'center' });
+            doc.moveDown();
+
+            doc.fontSize(12).text(`ID Compra: ${compra.idCompra}`);
+            doc.text(`Código: ${compra.codigo}`);
+            doc.text(`Fecha: ${compra.fecha}`);
+            doc.text(`Total: ${compra.total}`);
+            doc.text(`Proveedor: ${compra.proveedor || 'N/A'}`);
+            doc.text(`Estado de la Compra: ${compra.estadoCompra || 'N/A'}`);
+            doc.text(`Tipo de Pago: ${compra.tipoPago || 'N/A'}`);
+
+            // Espacio para separar los detalles de la compra
+            doc.moveDown();
+            doc.fontSize(16).text('Detalles de la Compra', { align: 'center' });
+            doc.moveDown();
+
+            // Verificar si hay detalles de la compra
+            if (detalleResults.length === 0) {
+                doc.fontSize(12).text('No hay registros de detalles para esta compra.');
+            } else {
+                // Agregar cada detalle de la compra
+                detalleResults.forEach((detalle) => {
+                    doc.fontSize(12).text(`Producto: ${detalle.productoNombre || 'N/A'}`);
+                    doc.text(`Cantidad: ${detalle.cantidad}`);
+                    doc.text(`Precio Unitario: ${detalle.precioUnitario}`);
+                    doc.text(`Precio Total: ${detalle.precioTotal}`);
+                    doc.moveDown();
+                });
+            }
+
+            // Finalizar el PDF
+            doc.end();
+        });
+    });
+});
+
+
+
+////////////////////////////////////////////////
+
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

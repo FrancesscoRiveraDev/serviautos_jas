@@ -1,0 +1,479 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Marcas</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/img/logo.jpg">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/css/templatemo.css">
+  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
+
+
+  <style>
+
+          
+    body {
+                background-image: url('/fondo2.jpeg');
+                background-size: cover; /* Ajustar la imagen al tamaño de la ventana del navegador */
+                background-attachment: fixed; /* Opcional: hacer que el fondo permanezca fijo al desplazar la página */
+            }
+    
+    
+            
+    th, input {
+        text-align: center;
+      }
+    
+    
+    
+    
+    
+    
+        /* Estilo para el modal de bienvenida */
+        .modal-welcome {
+                display: none;
+                position: fixed;
+                z-index: 1050;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.4);
+            }
+            .modal-content {
+                background-color: #fff;
+                margin: 10% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+            }
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {height: 550px}
+        
+        /* Set gray background color and 100% height */
+        .sidenav {
+          background-color: #f1f1f1;
+          height: 100%;
+        }
+            
+        /* On small screens, set height to 'auto' for the grid */
+        @media screen and (max-width: 767px) {
+          .row.content {height: auto;} 
+        }
+    
+        .navigation a {
+                position: relative;
+                font-size: 1.1em;
+                color: #000;
+                text-decoration: none;
+                font-weight: 500;
+                margin-left: 40px;
+            }
+            
+            .navigation a::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -6px;
+                width: 100%;
+                height: 3px;
+                background: #efbc1c;
+                border-radius: 5px;
+                transform-origin: right;
+                transform: scaleX(0);
+                transition: transform .5s;
+            }
+            
+            .navigation a:hover::after {
+                transform-origin: left;
+                transform: scaleX(1);
+            }
+            
+            .navigation .btnLogin-popup {
+                width: 130px;
+                height: 50px;
+                background: transparent;
+                border: 2px solid #747272;
+                outline: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 1.1em;
+                color: #efbc1c;
+                font-weight: 500;
+                margin-left: 40px;
+                transform: .5s;
+            }
+            
+            .navigation .btnLogin-popup:hover {
+                background: #efbc1c;
+                color: #162938;
+            }
+    
+            /* Estilo para el modal de bienvenida */
+        .modal-welcome {
+          display: none;
+          position: fixed;
+          z-index: 1050;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          overflow: auto;
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+          background-color: #fff;
+          margin: 10% auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%;
+        }
+    
+        /* Añadir estilos a la barra de navegación */
+        .navbar {
+          background-color: #efbc1c;
+        }
+    
+        /* Cambiar el color de fondo de los elementos de la barra de navegación al pasar el ratón sobre ellos */
+        .navbar-nav li a:hover {
+          background-color: #f2921a;
+        }
+    
+        /* Estilo para el botón de "Continuar" */
+        #btn-continue {
+          background-color: #efbc1c;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+        }
+        #btn-continue:hover {
+          background-color: #f2921a;
+        }
+        /* Estilo para los paneles "well" */
+        .well {
+          margin: 10px;
+          padding: 20px;
+          border: 1px solid #F0C232;
+          background-color: #f0f8ff; /* Color de fondo azul claro */
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Sombra suave */
+        }
+    
+        /* Cambiar el color de fondo de los elementos "well" al pasar el ratón sobre ellos */
+        .well:hover {
+          background-color: #f0f0f0; /* Color de fondo azul más claro al pasar el ratón, fondo tabla */
+        }
+    
+        .bar-chart {
+                width: 100%;
+                background-color: #f0f0f0;
+                height: 30px;
+                position: relative;
+            }
+    
+            .bar {
+                height: 100%;
+                background-color: #3498db;
+                transition: width 1s;
+            }
+    
+             /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {height: 550px}
+        
+        /* Set gray background color and 100% height */
+        .sidenav {
+          background-color: #f1f1f1;
+          height: 100%;
+        }
+            
+        /* On small screens, set height to 'auto' for the grid */
+        @media screen and (max-width: 767px) {
+          .row.content {height: auto;} 
+        }
+    
+        /* Set the color for the active class */
+        .nav-pills > li.active > a {
+            background-color: #efbc1c !important;
+            color: #000 !important; /* Cambiar el color del texto si es necesario */
+        }
+    
+        .fondo {
+      background-color: #efbc1c;
+      
+    }
+    
+        .fondo2 {
+      background-color: #f2921a;
+      
+    }
+    
+    .fondo3 {
+      background-color: #f1eee8;
+      
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto; /* Mantiene la relación de aspecto */
+    }
+    
+    
+    .img2 {
+        max-width: 70%;
+        height: auto; /* Mantiene la relación de aspecto */
+    }
+    
+    /* Estilos específicos para el logo */
+    .logo {
+        max-width: 200px; /* Ajusta este valor según tus necesidades */
+        max-height: 200px; /* Ajusta este valor según tus necesidades */
+        width: auto; /* Permite que el ancho se ajuste automáticamente */
+        height: auto; /* Permite que la altura se ajuste automáticamente */
+    }
+    
+    .text{
+        color: #efbc1c;
+    }
+
+    /*iconos de editar y eliminar cambiar color*/
+    
+    /* Estilos para el ícono de edición */
+    .btn-outline-info i {
+        color: #efbc1c;
+        font-size: 20px; /* Ajusta el tamaño según tus necesidades */
+    }
+
+    /* Estilos para el ícono de eliminación */
+    .btn-outline-danger i {
+        color: #efbc1c;
+        font-size: 20px; /* Ajusta el tamaño según tus necesidades */
+    }
+
+    .btn-bad {
+  background-color: #ff073d !important;
+  border-color: #ff073d !important;
+  color: #fff;
+}
+
+.icono-salir {
+  width: 70px; /* Adjust the width to your desired size */
+  height: 70px; /* Adjust the height to your desired size */
+  color: #efbc1c;
+}
+
+
+</style>
+
+    
+    
+      </style>
+
+
+</head>
+
+
+<body>
+
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-light shadow fondo">
+  <div class="container d-flex justify-content-between align-items-center">
+
+      
+
+      
+
+      <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+          
+          <div class="navbar align-self-center d-flex">
+              <!--
+              <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
+                  <div class="input-group">
+                      <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
+                      <div class="input-group-text">
+                          <i class="fa fa-fw fa-search"></i>
+                      </div>
+                  </div>
+              </div>
+              
+              <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
+                  <i class="fa fa-fw fa-search text-dark mr-2"></i>
+              </a>
+              -->
+             
+              <a class="nav-icon position-relative text-decoration-none" href="/admin/login">
+                  <i class="fa fa-fw fa-user text-dark mr-3"></i>
+                  <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"></span>
+              </a>
+          </div>
+      </div>
+
+  </div>
+</nav>
+<!-- Close Header -->
+
+
+
+
+
+<nav class="navbar navbar-inverse visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/admin/dashboard">Inicio</a></li>
+        <li><a href="/admin/usuario">Usuarios</a></li>
+        <li><a href="/admin/empleado">Empleados</a></li>
+        <li><a href="/admin/categoria">Categorias</a></li>
+        <li class="active"><a href="/admin/marca">Marcas</a></li>
+        <li><a href="/admin/producto">Productos</a></li>
+        <li><a href="/admin/comprar">Comprar Producto</a></li>
+        <li><a href="/admin/proveedor">Proveedores</a></li>
+        <li><a href="/admin/orden">Ordenes</a></li>
+        <li><a href="/admin/mensaje">Mensajes</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <nav class="navigation">
+      <div class="col-sm-3 sidenav hidden-xs">
+        <br>
+        <center>
+          <img src="/img/logo.jpg" alt="Logo del sitio web" style="width: 120px; height: auto;">
+        </center>
+        <br>
+        <ul class="nav nav-pills nav-stacked">
+          <li><a href="/admin/dashboard">Inicio</a></li>
+          <li><a href="/admin/usuario">Usuarios</a></li>
+          <li><a href="/admin/empleado">Empleados</a></li>
+          <li><a href="/admin/categoria">Categorias</a></li>
+        <li class="active"><a href="/admin/marca">Marcas</a></li>
+        <li><a href="/admin/producto">Productos</a></li>
+        <li><a href="/admin/comprar">Comprar Producto</a></li>
+        <li><a href="/admin/proveedor">Proveedores</a></li>
+        <li><a href="/admin/orden">Ordenes</a></li>
+        <li><a href="/admin/mensaje">Mensajes</a></li>
+        </ul><br>
+      </div>
+    </nav>
+
+
+    <div class="col-sm-6">
+        <div class="well">
+          <h4>Marcas</h4>
+          <p>Aqui ingresaras marcas nuevas al sistema.</p>
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="well">
+          <center>
+            <a href="/admin/logout">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icono-salir">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+              </svg>
+            </a>
+          </center>
+        </div>
+    </div>
+
+    
+
+
+
+    <!-- tabla de registro-->
+
+    <div class="col-sm-9">
+        <div class="well">
+            <form action="/saveMarca" method="POST">
+                
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1" required>
+                    </div> 
+                    <br>
+
+                     
+                    <br>
+                    <br>
+
+
+                <center>
+                    <button type="submit" class="btn btn-success btn-lg px-3" tabindex="5">Guardar</button>
+                    <a href="/admin/marca" class="btn btn-danger btn-lg px-3">Cancelar</a>
+                </center>
+            </form>
+            
+        </div>
+    </div>
+    
+    
+<!-- tabla de registro-->
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+<br>
+
+ <!-- Start Footer -->
+ <footer class="bg-dark" id="tempaltemo_footer">
+  <div class="container">
+      <div class="row">
+
+          
+
+          
+         
+
+      </div>
+
+      
+      
+  </div>
+  <br>
+
+  <div class="w-100 bg-black py-3">
+      <div class="container">
+          <div class="row pt-2">
+              <div class="col-12">
+                  <p class="text-left text-light">
+                      Copyright &copy; 2024 Serviautos Jas 
+                      | Designed by Francessco Rivera 
+                  </p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</footer>
+<!-- End Footer -->
+
+
+
+
+
+</body>
+</html>
